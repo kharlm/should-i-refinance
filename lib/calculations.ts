@@ -105,39 +105,6 @@ function getRecommendation(
   }
 }
 
-// Rate trend context — updated quarterly, last updated Q1 2025
-const RATE_CONTEXT = {
-  thirtyYearAvg: 6.65,
-  trend: 'declining' as const,
-  note: 'Rates have been gradually declining from 2024 highs as inflation cools.',
-}
-
-function getShouldWait(newRate: number, rateDropPercent: number) {
-  const belowAverage = newRate < RATE_CONTEXT.thirtyYearAvg
-  const smallDrop = rateDropPercent < 0.75
-
-  if (smallDrop && RATE_CONTEXT.trend === 'declining') {
-    return {
-      verdict: true,
-      reason: 'Rates are trending downward. Waiting 3–6 months could yield a better rate and higher savings.',
-      currentRateContext: `The current 30-year average is around ${RATE_CONTEXT.thirtyYearAvg}%. ${RATE_CONTEXT.note}`,
-    }
-  }
-
-  if (belowAverage) {
-    return {
-      verdict: false,
-      reason: `Your offered rate of ${newRate}% is already below the current national average of ${RATE_CONTEXT.thirtyYearAvg}%. This is a favorable rate — waiting risks rates moving back up.`,
-      currentRateContext: `The current 30-year average is around ${RATE_CONTEXT.thirtyYearAvg}%. ${RATE_CONTEXT.note}`,
-    }
-  }
-
-  return {
-    verdict: false,
-    reason: 'Rate forecasting is uncertain. If the numbers work for you today, acting sooner locks in your savings.',
-    currentRateContext: `The current 30-year average is around ${RATE_CONTEXT.thirtyYearAvg}%. ${RATE_CONTEXT.note}`,
-  }
-}
 
 export function calculateFullAnalysis(inputs: FullAnalysisInputs): MortgageAnalysis {
   const { currentRate, newRate, loanBalance, closingCosts, remainingTermMonths, newTermMonths } = inputs
@@ -179,6 +146,5 @@ export function calculateFullAnalysis(inputs: FullAnalysisInputs): MortgageAnaly
     netBenefitAfterClosing,
     lifetimeSavings: netBenefitAfterClosing,
     scenarios,
-    shouldWait: getShouldWait(newRate, rateDropPercent),
   }
 }

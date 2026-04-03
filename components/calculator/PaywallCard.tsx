@@ -8,7 +8,6 @@ const PAID_FEATURES = [
   'Total interest saved over life of loan',
   'Net benefit after closing costs',
   '15-yr vs 30-yr scenario comparison',
-  '"Should I wait?" rate trend analysis',
   'Downloadable PDF summary',
 ]
 

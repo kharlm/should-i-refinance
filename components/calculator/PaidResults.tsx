@@ -122,20 +122,6 @@ export default function PaidResults({ analysis }: { analysis: MortgageAnalysis }
         <ScenarioTable scenarios={analysis.scenarios} />
       </div>
 
-      {/* Should I wait */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-2">
-        <h3 className="text-sm font-semibold text-slate-800">Should You Wait for Lower Rates?</h3>
-        <div className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full ${
-          analysis.shouldWait.verdict
-            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-        }`}>
-          {analysis.shouldWait.verdict ? 'Consider Waiting' : "Don't Wait"}
-        </div>
-        <p className="text-sm text-slate-600 leading-relaxed">{analysis.shouldWait.reason}</p>
-        <p className="text-xs text-slate-400 italic">{analysis.shouldWait.currentRateContext}</p>
-      </div>
-
       {/* PDF download */}
       <button
         onClick={handleDownloadPdf}

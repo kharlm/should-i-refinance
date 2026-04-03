@@ -81,7 +81,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
               { tier: 'Free', title: 'Break-Even Calculator', items: ['Monthly payment difference', 'Break-even timeline in months', 'Instant, no account needed'] },
-              { tier: '$4.99', title: 'Full Analysis', items: ['Yes / No / Wait recommendation', 'Total interest saved over loan life', 'Net benefit after closing costs', '15-yr vs 30-yr comparison', '"Should I Wait?" rate analysis', 'Downloadable PDF summary'] },
+              { tier: '$4.99', title: 'Full Analysis', items: ['Yes / No / Wait recommendation', 'Total interest saved over loan life', 'Net benefit after closing costs', '15-yr vs 30-yr comparison', 'Downloadable PDF summary'] },
             ].map(({ tier, title, items }) => (
               <div key={tier} className={`rounded-2xl border p-6 space-y-4 ${tier === '$4.99' ? 'border-blue-200 bg-blue-50' : 'border-slate-200 bg-white'}`}>
                 <div className="flex items-center justify-between">

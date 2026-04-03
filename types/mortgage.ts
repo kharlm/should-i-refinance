@@ -38,9 +38,4 @@ export interface MortgageAnalysis {
   netBenefitAfterClosing: number
   lifetimeSavings: number
   scenarios: ScenarioResult[]   // current vs new (30yr) vs new (15yr if applicable)
-  shouldWait: {
-    verdict: boolean
-    reason: string
-    currentRateContext: string
-  }
 }

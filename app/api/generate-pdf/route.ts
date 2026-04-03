@@ -73,12 +73,6 @@ function generateHtml(analysis: MortgageAnalysis): string {
     </table>
   </div>
 
-  <div style="background:white;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-bottom:32px;">
-    <h2 style="margin:0 0 8px;font-size:14px;font-weight:600;">Should You Wait?</h2>
-    <p style="margin:0 0 6px;font-size:13px;color:#475569;">${analysis.shouldWait.reason}</p>
-    <p style="margin:0;font-size:12px;color:#94a3b8;font-style:italic;">${analysis.shouldWait.currentRateContext}</p>
-  </div>
-
   <p style="font-size:11px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:20px;">
     This report is for informational purposes only and does not constitute financial advice.<br>
     Always consult a licensed mortgage professional before making refinancing decisions.
