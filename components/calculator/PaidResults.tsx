@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { MortgageAnalysis } from '@/types/mortgage'
+import type { MortgageAnalysis, RateSensitivityRow } from '@/types/mortgage'
 
 function formatCurrency(n: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
@@ -12,21 +12,18 @@ function RecommendationBadge({ rec }: { rec: MortgageAnalysis['recommendation'] 
     yes: {
       wrapper: 'bg-emerald-50 border-emerald-200',
       badge: 'bg-emerald-600 text-white',
-      icon: 'text-emerald-600',
       label: 'Yes, Refinance',
       iconPath: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     },
     no: {
       wrapper: 'bg-red-50 border-red-200',
       badge: 'bg-red-600 text-white',
-      icon: 'text-red-600',
       label: "No, Don't Refinance",
       iconPath: 'M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     },
     wait: {
       wrapper: 'bg-amber-50 border-amber-200',
       badge: 'bg-amber-500 text-white',
-      icon: 'text-amber-600',
       label: 'Wait for Better Rates',
       iconPath: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z',
     },
@@ -68,10 +65,7 @@ function ScenarioTable({ scenarios }: { scenarios: MortgageAnalysis['scenarios']
         </thead>
         <tbody className="divide-y divide-slate-100">
           {scenarios.map((s, i) => (
-            <tr
-              key={s.label}
-              className={`transition-colors ${i === 0 ? 'text-slate-500' : 'text-slate-800 font-semibold'}`}
-            >
+            <tr key={s.label} className={i === 0 ? 'text-slate-500' : 'text-slate-800 font-semibold'}>
               <td className="py-3.5 pr-4 text-xs">{s.label}</td>
               <td className="py-3.5 px-3 text-right text-xs">{formatCurrency(s.monthlyPayment)}</td>
               <td className="py-3.5 px-3 text-right text-xs">{formatCurrency(s.totalInterest)}</td>
@@ -86,8 +80,49 @@ function ScenarioTable({ scenarios }: { scenarios: MortgageAnalysis['scenarios']
   )
 }
 
+function RateSensitivityTable({ rows }: { rows: RateSensitivityRow[] }) {
+  return (
+    <div className="overflow-x-auto -mx-1">
+      <table className="w-full text-sm min-w-[300px]">
+        <thead>
+          <tr className="border-b border-slate-200">
+            <th className="text-left py-2.5 pr-4 text-xs text-slate-400 font-semibold uppercase tracking-wide">Rate</th>
+            <th className="text-right py-2.5 px-3 text-xs text-slate-400 font-semibold uppercase tracking-wide">Monthly Savings</th>
+            <th className="text-right py-2.5 pl-3 text-xs text-slate-400 font-semibold uppercase tracking-wide">Break-Even</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {rows.map(row => (
+            <tr
+              key={row.rate}
+              className={row.isQuoted
+                ? 'bg-indigo-50 text-indigo-900 font-semibold'
+                : 'text-slate-600 hover:bg-slate-50'
+              }
+            >
+              <td className="py-3 pr-4 text-xs">
+                <span className="tabular-nums">{row.rate.toFixed(2)}%</span>
+                {row.isQuoted && (
+                  <span className="ml-2 text-[10px] font-bold text-indigo-500 bg-indigo-100 px-1.5 py-0.5 rounded-full">your quote</span>
+                )}
+              </td>
+              <td className={`py-3 px-3 text-right text-xs tabular-nums ${row.monthlySavings >= 0 ? 'text-emerald-600 font-semibold' : 'text-red-500'}`}>
+                {row.monthlySavings >= 0 ? '+' : ''}{formatCurrency(row.monthlySavings)}/mo
+              </td>
+              <td className="py-3 pl-3 text-right text-xs tabular-nums">
+                {row.breakEvenMonths >= 9999 ? '—' : `${row.breakEvenMonths}mo`}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 export default function PaidResults({ analysis }: { analysis: MortgageAnalysis }) {
   const [pdfLoading, setPdfLoading] = useState(false)
+  const stayYears = analysis.inputs.stayYears ?? 7
 
   async function handleDownloadPdf() {
     setPdfLoading(true)
@@ -136,17 +171,58 @@ export default function PaidResults({ analysis }: { analysis: MortgageAnalysis }
           }
         />
         <MetricCard
+          label={`Net Benefit at ${stayYears} Years`}
+          value={formatCurrency(analysis.stayYearsNetBenefit)}
+          sub={`your planned stay duration`}
+          accent={analysis.stayYearsNetBenefit >= 0}
+        />
+        <MetricCard
           label="Total Interest Saved"
           value={formatCurrency(analysis.totalInterestSaved)}
           sub="over life of loan"
         />
-        <MetricCard
-          label="Net Benefit"
-          value={formatCurrency(analysis.netBenefitAfterClosing)}
-          sub="after closing costs"
-          accent={analysis.netBenefitAfterClosing >= 0}
-        />
       </div>
+
+      {/* PMI analysis */}
+      {analysis.pmiAnalysis && (
+        <div className={`rounded-2xl border p-5 shadow-sm ${analysis.pmiAnalysis.requiresPmi ? 'bg-amber-50 border-amber-200' : 'bg-emerald-50 border-emerald-200'}`}>
+          <div className="flex items-start gap-3">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${analysis.pmiAnalysis.requiresPmi ? 'bg-amber-100' : 'bg-emerald-100'}`}>
+              <svg className={`w-4 h-4 ${analysis.pmiAnalysis.requiresPmi ? 'text-amber-600' : 'text-emerald-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                {analysis.pmiAnalysis.requiresPmi
+                  ? <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  : <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                }
+              </svg>
+            </div>
+            <div>
+              <p className={`text-sm font-semibold mb-1 ${analysis.pmiAnalysis.requiresPmi ? 'text-amber-800' : 'text-emerald-800'}`}>
+                PMI Analysis · {analysis.pmiAnalysis.currentLtv}% LTV
+              </p>
+              {analysis.pmiAnalysis.requiresPmi ? (
+                <p className="text-xs text-amber-700 leading-relaxed">
+                  Your loan-to-value ratio is above 80%, so PMI will likely apply to the new loan — estimated <strong>{formatCurrency(analysis.pmiAnalysis.estimatedMonthlyPmi)}/mo</strong> (based on ~0.8% annual rate). Factor this into your monthly savings figure.
+                </p>
+              ) : (
+                <p className="text-xs text-emerald-700 leading-relaxed">
+                  Your loan-to-value ratio is {analysis.pmiAnalysis.currentLtv}% — below 80%, so no PMI will be required on the new loan.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rate sensitivity */}
+      {analysis.rateSensitivity.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-slate-800">Rate Sensitivity</h3>
+            <p className="text-xs text-slate-400 mt-0.5">How your savings change if the rate you lock differs from your quote</p>
+          </div>
+          <RateSensitivityTable rows={analysis.rateSensitivity} />
+        </div>
+      )}
 
       {/* Scenario comparison */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">

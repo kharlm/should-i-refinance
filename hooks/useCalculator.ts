@@ -9,6 +9,8 @@ const DEFAULT_INPUTS: MortgageInputs = {
   newRate: 0,
   loanBalance: 0,
   closingCosts: 3000,
+  stayYears: 7,
+  homeValue: undefined,
 }
 
 export function useCalculator() {
@@ -29,7 +31,7 @@ export function useCalculator() {
     return calculateBreakEven(inputs)
   }, [inputs, isValid])
 
-  function updateField(field: keyof MortgageInputs, value: number) {
+  function updateField(field: keyof MortgageInputs, value: number | undefined) {
     setInputs(prev => ({ ...prev, [field]: value }))
   }
 

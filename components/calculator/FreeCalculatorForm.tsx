@@ -59,6 +59,35 @@ function InputField({
   )
 }
 
+function StaySlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label className="text-sm font-medium text-slate-700">How long do you plan to stay?</label>
+        <span className="text-sm font-bold text-indigo-600 tabular-nums">
+          {value} {value === 1 ? 'year' : 'years'}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={1}
+        max={20}
+        step={1}
+        value={value}
+        onChange={e => onChange(parseInt(e.target.value))}
+        className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-indigo-600"
+      />
+      <div className="flex justify-between text-xs text-slate-400">
+        <span>1 yr</span>
+        <span>5 yrs</span>
+        <span>10 yrs</span>
+        <span>15 yrs</span>
+        <span>20 yrs</span>
+      </div>
+    </div>
+  )
+}
+
 function EmptyState() {
   return (
     <div className="bg-slate-50 rounded-2xl border border-dashed border-slate-200 p-10 text-center h-full flex flex-col items-center justify-center min-h-[280px]">
@@ -118,6 +147,29 @@ export default function FreeCalculatorForm() {
           />
         </div>
 
+        {/* Stay years slider */}
+        <div className="pt-1">
+          <StaySlider
+            value={inputs.stayYears}
+            onChange={v => updateField('stayYears', v)}
+          />
+        </div>
+
+        {/* Optional home value for PMI */}
+        <div className="pt-1 border-t border-slate-100">
+          <p className="text-xs font-medium text-slate-500 mb-3">
+            Optional — for PMI analysis
+          </p>
+          <InputField
+            label="Home Value"
+            hint="(for PMI check)"
+            prefix="$"
+            placeholder="400,000"
+            value={inputs.homeValue ?? ''}
+            onChange={v => updateField('homeValue', v || undefined)}
+          />
+        </div>
+
         {inputs.currentRate > 0 && inputs.newRate > 0 && inputs.newRate >= inputs.currentRate && (
           <div className="flex items-start gap-2.5 text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
             <svg className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -138,7 +190,7 @@ export default function FreeCalculatorForm() {
       <div className="space-y-5">
         {isValid && result ? (
           <>
-            <BreakEvenResult result={result} />
+            <BreakEvenResult result={result} stayYears={inputs.stayYears} />
             <PaywallCard inputs={inputs} />
           </>
         ) : (

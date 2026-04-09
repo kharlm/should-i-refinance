@@ -5,8 +5,10 @@ import type { MortgageInputs } from '@/types/mortgage'
 
 const PAID_FEATURES = [
   'Full yes / no / wait recommendation',
+  'Net benefit at your planned stay duration',
+  'Rate sensitivity table (±0.75% scenarios)',
+  'PMI impact analysis',
   'Total interest saved over life of loan',
-  'Net benefit after closing costs',
   '15-yr vs 30-yr scenario comparison',
   'Downloadable PDF summary',
 ]

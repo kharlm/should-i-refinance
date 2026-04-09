@@ -4,11 +4,13 @@ function formatCurrency(n: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
 }
 
-export default function BreakEvenResult({ result }: { result: BreakEvenResult }) {
+export default function BreakEvenResult({ result, stayYears }: { result: BreakEvenResult; stayYears: number }) {
   const { monthlyDifference, breakEvenMonths, currentMonthlyPayment, newMonthlyPayment } = result
   const isSaving = monthlyDifference > 0
   const breakEvenYears = (breakEvenMonths / 12).toFixed(1)
   const newBarWidth = Math.round((newMonthlyPayment / currentMonthlyPayment) * 100)
+  const stayNetBenefit = (stayYears * 12 * monthlyDifference) - result.breakEvenMonths  // simplified
+  const stayNetBenefitDollars = (stayYears * 12 * monthlyDifference)
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -42,24 +44,30 @@ export default function BreakEvenResult({ result }: { result: BreakEvenResult })
 
         {/* Key metrics */}
         <div className={`rounded-xl p-4 ${isSaving ? 'bg-emerald-50 border border-emerald-100' : 'bg-red-50 border border-red-100'}`}>
-          <div className="flex items-start justify-between gap-4">
+          <div className="grid grid-cols-3 gap-3">
             <div>
-              <p className="text-xs font-medium text-slate-500 mb-1">Monthly Difference</p>
-              <p className={`text-2xl font-bold tracking-tight ${isSaving ? 'text-emerald-600' : 'text-red-600'}`}>
-                {isSaving ? '+' : '-'}{formatCurrency(Math.abs(monthlyDifference))}
+              <p className="text-xs font-medium text-slate-500 mb-1">Monthly Savings</p>
+              <p className={`text-xl font-bold tracking-tight ${isSaving ? 'text-emerald-600' : 'text-red-600'}`}>
+                {isSaving ? '+' : ''}{formatCurrency(monthlyDifference)}
               </p>
-              <p className="text-xs text-slate-400 mt-0.5">per month</p>
             </div>
-            <div className="text-right">
+            <div>
               <p className="text-xs font-medium text-slate-500 mb-1">Break-Even</p>
               {breakEvenMonths >= 9999 ? (
-                <p className="text-2xl font-bold text-slate-700 tracking-tight">Never</p>
+                <p className="text-xl font-bold text-slate-700 tracking-tight">Never</p>
               ) : (
                 <>
-                  <p className="text-2xl font-bold text-slate-700 tracking-tight">{breakEvenMonths}<span className="text-sm font-normal text-slate-400 ml-0.5">mo</span></p>
-                  <p className="text-xs text-slate-400">{breakEvenYears} years</p>
+                  <p className="text-xl font-bold text-slate-700 tracking-tight">{breakEvenMonths}<span className="text-sm font-normal text-slate-400 ml-0.5">mo</span></p>
+                  <p className="text-xs text-slate-400">{breakEvenYears} yrs</p>
                 </>
               )}
+            </div>
+            <div>
+              <p className="text-xs font-medium text-slate-500 mb-1">At {stayYears} Years</p>
+              <p className={`text-xl font-bold tracking-tight ${stayNetBenefitDollars >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                {stayNetBenefitDollars >= 0 ? '+' : ''}{formatCurrency(stayNetBenefitDollars)}
+              </p>
+              <p className="text-xs text-slate-400">total saved</p>
             </div>
           </div>
           <p className="mt-3 text-xs text-slate-600 leading-relaxed">

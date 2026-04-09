@@ -24,6 +24,8 @@ export async function POST(req: NextRequest) {
       newRate: parseFloat(meta.newRate),
       loanBalance: parseFloat(meta.loanBalance),
       closingCosts: parseFloat(meta.closingCosts),
+      stayYears: meta.stayYears ? parseFloat(meta.stayYears) : 7,
+      homeValue: meta.homeValue ? parseFloat(meta.homeValue) : undefined,
       remainingTermMonths: 360,
       newTermMonths: 360,
     }
