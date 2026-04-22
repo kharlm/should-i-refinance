@@ -13,14 +13,18 @@ export default function Image() {
           height: '100%',
           display: 'flex',
           backgroundColor: '#0f172a',
-          padding: '72px 80px',
+          paddingTop: 72,
+          paddingBottom: 72,
+          paddingLeft: 80,
+          paddingRight: 80,
           fontFamily: 'sans-serif',
         }}
       >
         {/* Left: branding + headline */}
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', gap: 0 }}>
-          {/* Logo badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 36 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
+
+          {/* Logo row */}
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 36 }}>
             <div
               style={{
                 width: 52,
@@ -33,16 +37,20 @@ export default function Image() {
                 color: '#ffffff',
                 fontSize: 26,
                 fontWeight: 700,
+                marginRight: 14,
               }}
             >
               $
             </div>
-            <span style={{ color: '#94a3b8', fontSize: 18, fontWeight: 500 }}>calculatemyrefi.com</span>
+            <div style={{ display: 'flex', color: '#94a3b8', fontSize: 18, fontWeight: 500 }}>
+              calculatemyrefi.com
+            </div>
           </div>
 
           {/* Headline */}
           <div
             style={{
+              display: 'flex',
               color: '#ffffff',
               fontSize: 64,
               fontWeight: 800,
@@ -54,8 +62,8 @@ export default function Image() {
           </div>
 
           {/* Subheadline */}
-          <div style={{ color: '#94a3b8', fontSize: 26, fontWeight: 400, lineHeight: 1.4, marginBottom: 44 }}>
-            Free break-even calculator for your mortgage.{'\n'}See if refinancing makes sense in seconds.
+          <div style={{ display: 'flex', color: '#94a3b8', fontSize: 24, fontWeight: 400, lineHeight: 1.4, marginBottom: 44 }}>
+            Free break-even calculator. See if refinancing makes sense in seconds.
           </div>
 
           {/* CTA pill */}
@@ -67,7 +75,10 @@ export default function Image() {
               color: '#ffffff',
               fontSize: 18,
               fontWeight: 700,
-              padding: '14px 28px',
+              paddingTop: 14,
+              paddingBottom: 14,
+              paddingLeft: 28,
+              paddingRight: 28,
               borderRadius: 40,
             }}
           >
@@ -81,7 +92,6 @@ export default function Image() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            gap: 16,
             width: 320,
             marginLeft: 72,
           }}
@@ -90,23 +100,30 @@ export default function Image() {
             { label: 'Monthly Savings', value: '$312', sub: 'per month', accent: '#10b981' },
             { label: 'Break-Even', value: '19 months', sub: '1.6 years', accent: '#ffffff' },
             { label: 'Total Interest Saved', value: '$47,200', sub: 'over life of loan', accent: '#ffffff' },
-          ].map(card => (
+          ].map((card, i) => (
             <div
               key={card.label}
               style={{
-                backgroundColor: '#1e293b',
-                borderRadius: 16,
-                padding: '20px 24px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 4,
+                backgroundColor: '#1e293b',
+                borderRadius: 16,
+                paddingTop: 20,
+                paddingBottom: 20,
+                paddingLeft: 24,
+                paddingRight: 24,
+                marginTop: i === 0 ? 0 : 16,
               }}
             >
-              <div style={{ color: '#64748b', fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
-                {card.label}
+              <div style={{ display: 'flex', color: '#64748b', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
+                {card.label.toUpperCase()}
               </div>
-              <div style={{ color: card.accent, fontSize: 28, fontWeight: 800 }}>{card.value}</div>
-              <div style={{ color: '#475569', fontSize: 13 }}>{card.sub}</div>
+              <div style={{ display: 'flex', color: card.accent, fontSize: 28, fontWeight: 800, marginBottom: 2 }}>
+                {card.value}
+              </div>
+              <div style={{ display: 'flex', color: '#475569', fontSize: 13 }}>
+                {card.sub}
+              </div>
             </div>
           ))}
         </div>
