@@ -9,10 +9,10 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'sw
 
 export const metadata: Metadata = {
   title: {
-    default: 'Should I Refinance My Mortgage? — Free Calculator',
+    default: 'Should I Refinance My Mortgage? — Free Break-Even Calculator',
     template: '%s — Should I Refinance',
   },
-  description: 'Free mortgage refinance break-even calculator. Find out if refinancing makes sense for your situation in seconds.',
+  description: 'Enter your current rate, new rate, and loan balance to instantly see your monthly savings, break-even point, and whether refinancing makes financial sense.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
 }
 
