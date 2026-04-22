@@ -61,7 +61,7 @@ export default function Image() {
           {/* CTA pill */}
           <div
             style={{
-              display: 'inline-flex',
+              display: 'flex',
               alignSelf: 'flex-start',
               backgroundColor: '#4f46e5',
               color: '#ffffff',
