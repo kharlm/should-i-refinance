@@ -23,13 +23,12 @@ export function totalInterest(principal: number, annualRatePercent: number, term
 }
 
 export function calculateBreakEven(inputs: MortgageInputs): BreakEvenResult {
-  const { currentRate, newRate, loanBalance, closingCosts } = inputs
+  const { currentRate, newRate, loanBalance, closingCosts, remainingYears } = inputs
 
-  // Use 30yr as default remaining term for free tier
-  const termMonths = 360
+  const currentTermMonths = Math.round((remainingYears ?? 30) * 12)
 
-  const currentMonthlyPayment = monthlyPayment(loanBalance, currentRate, termMonths)
-  const newMonthlyPayment = monthlyPayment(loanBalance, newRate, termMonths)
+  const currentMonthlyPayment = monthlyPayment(loanBalance, currentRate, currentTermMonths)
+  const newMonthlyPayment = monthlyPayment(loanBalance, newRate, 360)
   const monthlyDifference = currentMonthlyPayment - newMonthlyPayment
 
   const breakEvenMonths = monthlyDifference > 0
@@ -145,9 +144,9 @@ function getRecommendation(
 }
 
 export function calculateFullAnalysis(inputs: FullAnalysisInputs): MortgageAnalysis {
-  const { currentRate, newRate, loanBalance, closingCosts, remainingTermMonths, newTermMonths, stayYears, homeValue } = inputs
+  const { currentRate, newRate, loanBalance, closingCosts, remainingTermMonths, newTermMonths, stayYears, remainingYears, homeValue } = inputs
 
-  const breakEven = calculateBreakEven({ currentRate, newRate, loanBalance, closingCosts, stayYears })
+  const breakEven = calculateBreakEven({ currentRate, newRate, loanBalance, closingCosts, stayYears, remainingYears })
 
   const currentMonthly = monthlyPayment(loanBalance, currentRate, remainingTermMonths)
   const currentTotalInterest = totalInterest(loanBalance, currentRate, remainingTermMonths)
@@ -177,7 +176,7 @@ export function calculateFullAnalysis(inputs: FullAnalysisInputs): MortgageAnaly
     )
   }
 
-  const rateSensitivity = calculateRateSensitivity({ currentRate, newRate, loanBalance, closingCosts, stayYears: effectiveStayYears })
+  const rateSensitivity = calculateRateSensitivity({ currentRate, newRate, loanBalance, closingCosts, stayYears: effectiveStayYears, remainingYears })
   const pmiAnalysis = homeValue && homeValue > 0
     ? calculatePmiAnalysis(loanBalance, homeValue)
     : null

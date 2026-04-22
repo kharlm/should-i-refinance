@@ -16,14 +16,16 @@ export async function GET(req: NextRequest) {
   }
 
   const meta = session.metadata!
+  const remainingYears = meta.remainingYears ? parseFloat(meta.remainingYears) : 30
   const inputs: FullAnalysisInputs = {
     currentRate: parseFloat(meta.currentRate),
     newRate: parseFloat(meta.newRate),
     loanBalance: parseFloat(meta.loanBalance),
     closingCosts: parseFloat(meta.closingCosts),
     stayYears: meta.stayYears ? parseFloat(meta.stayYears) : 7,
+    remainingYears,
     homeValue: meta.homeValue ? parseFloat(meta.homeValue) : undefined,
-    remainingTermMonths: 360,
+    remainingTermMonths: Math.round(remainingYears * 12),
     newTermMonths: 360,
   }
 

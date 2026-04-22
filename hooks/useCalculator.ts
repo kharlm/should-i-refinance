@@ -10,6 +10,7 @@ const DEFAULT_INPUTS: MortgageInputs = {
   loanBalance: 0,
   closingCosts: 3000,
   stayYears: 7,
+  remainingYears: 30,
   homeValue: undefined,
 }
 

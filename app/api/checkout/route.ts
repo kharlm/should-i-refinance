@@ -5,7 +5,7 @@ import type { MortgageInputs } from '@/types/mortgage'
 export async function POST(req: NextRequest) {
   const body: MortgageInputs = await req.json()
 
-  const { currentRate, newRate, loanBalance, closingCosts, stayYears, homeValue } = body
+  const { currentRate, newRate, loanBalance, closingCosts, stayYears, remainingYears, homeValue } = body
 
   if (!currentRate || !newRate || !loanBalance || closingCosts === undefined) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
       loanBalance: String(loanBalance),
       closingCosts: String(closingCosts),
       stayYears: String(stayYears ?? 7),
+      remainingYears: String(remainingYears ?? 30),
       homeValue: homeValue ? String(homeValue) : '',
     },
     success_url: `${baseUrl}/results?session_id={CHECKOUT_SESSION_ID}`,

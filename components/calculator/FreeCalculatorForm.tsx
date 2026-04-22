@@ -12,6 +12,7 @@ function InputField({
   value,
   onChange,
   placeholder,
+  step = '0.01',
 }: {
   label: string
   hint?: string
@@ -20,6 +21,7 @@ function InputField({
   value: number | ''
   onChange: (val: number) => void
   placeholder?: string
+  step?: string
 }) {
   return (
     <div className="space-y-1.5">
@@ -34,7 +36,7 @@ function InputField({
         <input
           type="number"
           inputMode="decimal"
-          step="0.01"
+          step={step}
           min="0"
           placeholder={placeholder}
           value={value === 0 ? '' : value}
@@ -136,6 +138,15 @@ export default function FreeCalculatorForm() {
             placeholder="320,000"
             value={inputs.loanBalance}
             onChange={v => updateField('loanBalance', v)}
+          />
+          <InputField
+            label="Years Left on Loan"
+            hint="(on current loan)"
+            suffix="yrs"
+            placeholder="30"
+            step="1"
+            value={inputs.remainingYears}
+            onChange={v => updateField('remainingYears', v)}
           />
           <InputField
             label="Estimated Closing Costs"

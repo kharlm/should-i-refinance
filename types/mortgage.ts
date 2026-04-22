@@ -4,11 +4,12 @@ export interface MortgageInputs {
   loanBalance: number       // remaining principal in dollars
   closingCosts: number      // estimated closing costs in dollars
   stayYears: number         // how long user plans to stay (1–20, default 7)
+  remainingYears: number    // years left on current loan (default 30)
   homeValue?: number        // optional — used for PMI analysis
 }
 
 export interface FullAnalysisInputs extends MortgageInputs {
-  remainingTermMonths: number   // e.g. 300 for 25 years left
+  remainingTermMonths: number   // e.g. 300 for 25 years left (derived from remainingYears)
   newTermMonths: number         // e.g. 360 for 30yr or 180 for 15yr
 }
 
