@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   },
   description: 'Enter your current rate, new rate, and loan balance to instantly see your monthly savings, break-even point, and whether refinancing makes financial sense.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  alternates: {
+    canonical: 'https://www.calculatemyrefi.com',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
